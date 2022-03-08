@@ -2,10 +2,10 @@ package observer;
 
 public class StatisticsDisplay implements Observer, DisplayElement{
     private float temperature;
-    private float humidity;
-    private float pressure;
+    private float minTemperature;
+    private float maxTemperature;
 
-    private WeatherData weatherData;
+    private final WeatherData weatherData;
 
     public StatisticsDisplay(WeatherData weatherData) {
         this.weatherData = weatherData;
@@ -14,15 +14,18 @@ public class StatisticsDisplay implements Observer, DisplayElement{
 
     @Override
     public void display() {
-        System.out.println(StatisticsDisplay.class.getName() +
-                " temperature: " + temperature + ", humidity: " + humidity + ", pressure: " + pressure);
+        System.out.println("Min/Max: " + minTemperature + "/" + maxTemperature);
     }
 
     @Override
-    public void update(float temp, float humidity, float pressure) {
-        this.temperature = temp;
-        this.humidity = humidity;
-        this.pressure = pressure;
+    public void update() {
+        this.temperature = weatherData.getTemperature();
+        if (temperature > maxTemperature || maxTemperature == 0) {
+            maxTemperature = temperature;
+        }
+        if (temperature < minTemperature || minTemperature == 0) {
+            minTemperature = temperature;
+        }
         display();
     }
 }
